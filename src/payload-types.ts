@@ -69,6 +69,8 @@ export interface Config {
   collections: {
     users: User;
     media: Media;
+    servicePages: ServicePage;
+    formSubmissions: FormSubmission;
     'payload-kv': PayloadKv;
     'payload-locked-documents': PayloadLockedDocument;
     'payload-preferences': PayloadPreference;
@@ -78,17 +80,37 @@ export interface Config {
   collectionsSelect: {
     users: UsersSelect<false> | UsersSelect<true>;
     media: MediaSelect<false> | MediaSelect<true>;
+    servicePages: ServicePagesSelect<false> | ServicePagesSelect<true>;
+    formSubmissions: FormSubmissionsSelect<false> | FormSubmissionsSelect<true>;
     'payload-kv': PayloadKvSelect<false> | PayloadKvSelect<true>;
     'payload-locked-documents': PayloadLockedDocumentsSelect<false> | PayloadLockedDocumentsSelect<true>;
     'payload-preferences': PayloadPreferencesSelect<false> | PayloadPreferencesSelect<true>;
     'payload-migrations': PayloadMigrationsSelect<false> | PayloadMigrationsSelect<true>;
   };
   db: {
-    defaultIDType: string;
+    defaultIDType: number;
   };
   fallbackLocale: null;
-  globals: {};
-  globalsSelect: {};
+  globals: {
+    siteSettings: SiteSetting;
+    header: Header;
+    footer: Footer;
+    homePage: HomePage;
+    aboutPage: AboutPage;
+    servicesPage: ServicesPage;
+    contactPage: ContactPage;
+    faqPage: FaqPage;
+  };
+  globalsSelect: {
+    siteSettings: SiteSettingsSelect<false> | SiteSettingsSelect<true>;
+    header: HeaderSelect<false> | HeaderSelect<true>;
+    footer: FooterSelect<false> | FooterSelect<true>;
+    homePage: HomePageSelect<false> | HomePageSelect<true>;
+    aboutPage: AboutPageSelect<false> | AboutPageSelect<true>;
+    servicesPage: ServicesPageSelect<false> | ServicesPageSelect<true>;
+    contactPage: ContactPageSelect<false> | ContactPageSelect<true>;
+    faqPage: FaqPageSelect<false> | FaqPageSelect<true>;
+  };
   locale: null;
   widgets: {
     collections: CollectionsWidget;
@@ -122,7 +144,7 @@ export interface UserAuthOperations {
  * via the `definition` "users".
  */
 export interface User {
-  id: string;
+  id: number;
   updatedAt: string;
   createdAt: string;
   email: string;
@@ -147,7 +169,7 @@ export interface User {
  * via the `definition` "media".
  */
 export interface Media {
-  id: string;
+  id: number;
   alt: string;
   updatedAt: string;
   createdAt: string;
@@ -160,13 +182,639 @@ export interface Media {
   height?: number | null;
   focalX?: number | null;
   focalY?: number | null;
+  sizes?: {
+    thumbnail?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+    card?: {
+      url?: string | null;
+      width?: number | null;
+      height?: number | null;
+      mimeType?: string | null;
+      filesize?: number | null;
+      filename?: string | null;
+    };
+  };
+}
+/**
+ * Reusable service landing pages assembled from blocks.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "servicePages".
+ */
+export interface ServicePage {
+  id: number;
+  title: string;
+  /**
+   * Used for the public route, for example /services/engineering-solutions.
+   */
+  slug: string;
+  shortLabel?: string | null;
+  excerpt?: string | null;
+  cardLabel?: string | null;
+  heroImage?: (number | null) | Media;
+  listingImage?: (number | null) | Media;
+  showInHomepagePicker?: boolean | null;
+  showInServicesPage?: boolean | null;
+  blocks: (
+    | ServiceHeroBlock
+    | OverviewSplitBlock
+    | ConfidenceSectionBlock
+    | EquationStripBlock
+    | ReasonsGridBlock
+    | ProcessStepsBlock
+    | RegionsGridBlock
+    | SupplyCardsBlock
+    | ContainerEquipmentBlock
+    | WorkflowAlternatingBlock
+    | StructuresCardsBlock
+    | ProductionCompositeBlock
+    | ConsultationGridBlock
+    | ServiceOfficeBlock
+    | ApproachCompositeBlock
+    | RichTextIntroBlock
+    | OverlayInfoPanelBlock
+    | SupportSplitBlock
+    | CtaBannerBlock
+    | TextareaListBlock
+    | FeatureHighlightSplitBlock
+    | ApproachSplitBlock
+    | IntroBadgeBlock
+    | TitleChecklistSplitBlock
+  )[];
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    canonicalUrl?: string | null;
+    robots?: string | null;
+    ogTitle?: string | null;
+    ogDescription?: string | null;
+    ogImage?: (number | null) | Media;
+    faviconSvgOverride?: (number | null) | Media;
+    faviconIcoOverride?: (number | null) | Media;
+    appleTouchIconOverride?: (number | null) | Media;
+  };
+  /**
+   * Controls service listing order.
+   */
+  sortOrder?: number | null;
+  updatedAt: string;
+  createdAt: string;
+  _status?: ('draft' | 'published') | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServiceHeroBlock".
+ */
+export interface ServiceHeroBlock {
+  title: string;
+  subtitle?: string | null;
+  image?: (number | null) | Media;
+  formTitle?: string | null;
+  formFields?:
+    | {
+        name: string;
+        label: string;
+        inputType: 'text' | 'email' | 'tel' | 'textarea';
+        placeholder?: string | null;
+        required?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  buttonLabel?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'serviceHero';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OverviewSplitBlock".
+ */
+export interface OverviewSplitBlock {
+  introText: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  };
+  introImage?: (number | null) | Media;
+  sectionTitle: string;
+  deliverables?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  outroText?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  detailImage?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'overviewSplit';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ConfidenceSectionBlock".
+ */
+export interface ConfidenceSectionBlock {
+  title: string;
+  body: string;
+  factsLabel: string;
+  facts?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'confidenceSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EquationStripBlock".
+ */
+export interface EquationStripBlock {
+  leftText: string;
+  centerText: string;
+  rightText: string;
+  leftSymbol?: string | null;
+  rightSymbol?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'equationStrip';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ReasonsGridBlock".
+ */
+export interface ReasonsGridBlock {
+  title: string;
+  subtitle?: string | null;
+  topItems?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  bottomItems?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'reasonsGrid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProcessStepsBlock".
+ */
+export interface ProcessStepsBlock {
+  title: string;
+  steps?:
+    | {
+        number: string;
+        title: string;
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'processSteps';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RegionsGridBlock".
+ */
+export interface RegionsGridBlock {
+  intro: string;
+  regions?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'regionsGrid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SupplyCardsBlock".
+ */
+export interface SupplyCardsBlock {
+  title: string;
+  cards?:
+    | {
+        title: string;
+        lines?:
+          | {
+              text: string;
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'supplyCards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContainerEquipmentBlock".
+ */
+export interface ContainerEquipmentBlock {
+  title: string;
+  backgroundImage?: (number | null) | Media;
+  lines?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  features?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'containerEquipment';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WorkflowAlternatingBlock".
+ */
+export interface WorkflowAlternatingBlock {
+  title: string;
+  steps?:
+    | {
+        number: string;
+        title: string;
+        reverse?: boolean | null;
+        image?: (number | null) | Media;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'workflowAlternating';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StructuresCardsBlock".
+ */
+export interface StructuresCardsBlock {
+  introTop: string;
+  introBottom: string;
+  cards?:
+    | {
+        title: string;
+        note: string;
+        id?: string | null;
+      }[]
+    | null;
+  outro?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'structuresCards';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductionCompositeBlock".
+ */
+export interface ProductionCompositeBlock {
+  title: string;
+  backgroundImage?: (number | null) | Media;
+  cards?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  complianceItems?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'productionComposite';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ConsultationGridBlock".
+ */
+export interface ConsultationGridBlock {
+  title?: string | null;
+  introTop: string;
+  introBottom: string;
+  rows?:
+    | {
+        cards?:
+          | {
+              text: string;
+              tone: 'light' | 'dark' | 'ghost';
+              id?: string | null;
+            }[]
+          | null;
+        id?: string | null;
+      }[]
+    | null;
+  outro?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'consultationGrid';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServiceOfficeBlock".
+ */
+export interface ServiceOfficeBlock {
+  eyebrow?: string | null;
+  title: string;
+  text: string;
+  image?: (number | null) | Media;
+  imageUrl?: string | null;
+  imageAlt?: string | null;
+  details?:
+    | {
+        label: string;
+        value: string;
+        link?: string | null;
+        id?: string | null;
+      }[]
+    | null;
+  buttonLabel?: string | null;
+  buttonUrl?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'serviceOffice';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ApproachCompositeBlock".
+ */
+export interface ApproachCompositeBlock {
+  topTitle: string;
+  topText: string;
+  backgroundImage?: (number | null) | Media;
+  reviewLabel: string;
+  reviewItems?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  includedTitle: string;
+  includedSubtitle: string;
+  includedItems?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  excludedTitle: string;
+  excludedSubtitle: string;
+  excludedItems?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  bottomLabel: string;
+  bottomItems?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  bottomTitle: string;
+  bottomText: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'approachComposite';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RichTextIntroBlock".
+ */
+export interface RichTextIntroBlock {
+  paragraphs?:
+    | {
+        content: {
+          root: {
+            type: string;
+            children: {
+              type: any;
+              version: number;
+              [k: string]: unknown;
+            }[];
+            direction: ('ltr' | 'rtl') | null;
+            format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+            indent: number;
+            version: number;
+          };
+          [k: string]: unknown;
+        };
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'richTextIntro';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OverlayInfoPanelBlock".
+ */
+export interface OverlayInfoPanelBlock {
+  title: string;
+  subtitle?: string | null;
+  backgroundImage?: (number | null) | Media;
+  introText?: string | null;
+  services?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  outroText?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'overlayInfoPanel';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SupportSplitBlock".
+ */
+export interface SupportSplitBlock {
+  leftLabel: string;
+  leftItems?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  rightTitle: string;
+  rightText?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'supportSplit';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaBannerBlock".
+ */
+export interface CtaBannerBlock {
+  title: string;
+  description: string;
+  buttonLabel: string;
+  buttonUrl: string;
+  image?: (number | null) | Media;
+  darkMode?: boolean | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'ctaBanner';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextareaListBlock".
+ */
+export interface TextareaListBlock {
+  title: string;
+  items?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'textareaList';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureHighlightSplitBlock".
+ */
+export interface FeatureHighlightSplitBlock {
+  title: string;
+  introText: string;
+  highlights?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'featureHighlightSplit';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ApproachSplitBlock".
+ */
+export interface ApproachSplitBlock {
+  title: string;
+  text: string;
+  label: string;
+  items?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'approachSplit';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IntroBadgeBlock".
+ */
+export interface IntroBadgeBlock {
+  introText: string;
+  badgeText: string;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'introBadge';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TitleChecklistSplitBlock".
+ */
+export interface TitleChecklistSplitBlock {
+  title: string;
+  backgroundImage?: (number | null) | Media;
+  items?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'titleChecklistSplit';
+}
+/**
+ * Optional storage for contact and request form entries.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "formSubmissions".
+ */
+export interface FormSubmission {
+  id: number;
+  name: string;
+  email: string;
+  phone?: string | null;
+  company?: string | null;
+  subject?: string | null;
+  submissionType: 'contact' | 'quote-request' | 'callback-request';
+  servicePage?: (number | null) | ServicePage;
+  message?: string | null;
+  status?: ('new' | 'in-progress' | 'closed') | null;
+  updatedAt: string;
+  createdAt: string;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "payload-kv".
  */
 export interface PayloadKv {
-  id: string;
+  id: number;
   key: string;
   data:
     | {
@@ -183,20 +831,28 @@ export interface PayloadKv {
  * via the `definition` "payload-locked-documents".
  */
 export interface PayloadLockedDocument {
-  id: string;
+  id: number;
   document?:
     | ({
         relationTo: 'users';
-        value: string | User;
+        value: number | User;
       } | null)
     | ({
         relationTo: 'media';
-        value: string | Media;
+        value: number | Media;
+      } | null)
+    | ({
+        relationTo: 'servicePages';
+        value: number | ServicePage;
+      } | null)
+    | ({
+        relationTo: 'formSubmissions';
+        value: number | FormSubmission;
       } | null);
   globalSlug?: string | null;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   updatedAt: string;
   createdAt: string;
@@ -206,10 +862,10 @@ export interface PayloadLockedDocument {
  * via the `definition` "payload-preferences".
  */
 export interface PayloadPreference {
-  id: string;
+  id: number;
   user: {
     relationTo: 'users';
-    value: string | User;
+    value: number | User;
   };
   key?: string | null;
   value?:
@@ -229,7 +885,7 @@ export interface PayloadPreference {
  * via the `definition` "payload-migrations".
  */
 export interface PayloadMigration {
-  id: string;
+  id: number;
   name?: string | null;
   batch?: number | null;
   updatedAt: string;
@@ -274,6 +930,564 @@ export interface MediaSelect<T extends boolean = true> {
   height?: T;
   focalX?: T;
   focalY?: T;
+  sizes?:
+    | T
+    | {
+        thumbnail?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+        card?:
+          | T
+          | {
+              url?: T;
+              width?: T;
+              height?: T;
+              mimeType?: T;
+              filesize?: T;
+              filename?: T;
+            };
+      };
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "servicePages_select".
+ */
+export interface ServicePagesSelect<T extends boolean = true> {
+  title?: T;
+  slug?: T;
+  shortLabel?: T;
+  excerpt?: T;
+  cardLabel?: T;
+  heroImage?: T;
+  listingImage?: T;
+  showInHomepagePicker?: T;
+  showInServicesPage?: T;
+  blocks?:
+    | T
+    | {
+        serviceHero?: T | ServiceHeroBlockSelect<T>;
+        overviewSplit?: T | OverviewSplitBlockSelect<T>;
+        confidenceSection?: T | ConfidenceSectionBlockSelect<T>;
+        equationStrip?: T | EquationStripBlockSelect<T>;
+        reasonsGrid?: T | ReasonsGridBlockSelect<T>;
+        processSteps?: T | ProcessStepsBlockSelect<T>;
+        regionsGrid?: T | RegionsGridBlockSelect<T>;
+        supplyCards?: T | SupplyCardsBlockSelect<T>;
+        containerEquipment?: T | ContainerEquipmentBlockSelect<T>;
+        workflowAlternating?: T | WorkflowAlternatingBlockSelect<T>;
+        structuresCards?: T | StructuresCardsBlockSelect<T>;
+        productionComposite?: T | ProductionCompositeBlockSelect<T>;
+        consultationGrid?: T | ConsultationGridBlockSelect<T>;
+        serviceOffice?: T | ServiceOfficeBlockSelect<T>;
+        approachComposite?: T | ApproachCompositeBlockSelect<T>;
+        richTextIntro?: T | RichTextIntroBlockSelect<T>;
+        overlayInfoPanel?: T | OverlayInfoPanelBlockSelect<T>;
+        supportSplit?: T | SupportSplitBlockSelect<T>;
+        ctaBanner?: T | CtaBannerBlockSelect<T>;
+        textareaList?: T | TextareaListBlockSelect<T>;
+        featureHighlightSplit?: T | FeatureHighlightSplitBlockSelect<T>;
+        approachSplit?: T | ApproachSplitBlockSelect<T>;
+        introBadge?: T | IntroBadgeBlockSelect<T>;
+        titleChecklistSplit?: T | TitleChecklistSplitBlockSelect<T>;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        canonicalUrl?: T;
+        robots?: T;
+        ogTitle?: T;
+        ogDescription?: T;
+        ogImage?: T;
+        faviconSvgOverride?: T;
+        faviconIcoOverride?: T;
+        appleTouchIconOverride?: T;
+      };
+  sortOrder?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  _status?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServiceHeroBlock_select".
+ */
+export interface ServiceHeroBlockSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  image?: T;
+  formTitle?: T;
+  formFields?:
+    | T
+    | {
+        name?: T;
+        label?: T;
+        inputType?: T;
+        placeholder?: T;
+        required?: T;
+        id?: T;
+      };
+  buttonLabel?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OverviewSplitBlock_select".
+ */
+export interface OverviewSplitBlockSelect<T extends boolean = true> {
+  introText?: T;
+  introImage?: T;
+  sectionTitle?: T;
+  deliverables?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  outroText?: T;
+  detailImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ConfidenceSectionBlock_select".
+ */
+export interface ConfidenceSectionBlockSelect<T extends boolean = true> {
+  title?: T;
+  body?: T;
+  factsLabel?: T;
+  facts?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "EquationStripBlock_select".
+ */
+export interface EquationStripBlockSelect<T extends boolean = true> {
+  leftText?: T;
+  centerText?: T;
+  rightText?: T;
+  leftSymbol?: T;
+  rightSymbol?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ReasonsGridBlock_select".
+ */
+export interface ReasonsGridBlockSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  topItems?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  bottomItems?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProcessStepsBlock_select".
+ */
+export interface ProcessStepsBlockSelect<T extends boolean = true> {
+  title?: T;
+  steps?:
+    | T
+    | {
+        number?: T;
+        title?: T;
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RegionsGridBlock_select".
+ */
+export interface RegionsGridBlockSelect<T extends boolean = true> {
+  intro?: T;
+  regions?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SupplyCardsBlock_select".
+ */
+export interface SupplyCardsBlockSelect<T extends boolean = true> {
+  title?: T;
+  cards?:
+    | T
+    | {
+        title?: T;
+        lines?:
+          | T
+          | {
+              text?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ContainerEquipmentBlock_select".
+ */
+export interface ContainerEquipmentBlockSelect<T extends boolean = true> {
+  title?: T;
+  backgroundImage?: T;
+  lines?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  features?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "WorkflowAlternatingBlock_select".
+ */
+export interface WorkflowAlternatingBlockSelect<T extends boolean = true> {
+  title?: T;
+  steps?:
+    | T
+    | {
+        number?: T;
+        title?: T;
+        reverse?: T;
+        image?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "StructuresCardsBlock_select".
+ */
+export interface StructuresCardsBlockSelect<T extends boolean = true> {
+  introTop?: T;
+  introBottom?: T;
+  cards?:
+    | T
+    | {
+        title?: T;
+        note?: T;
+        id?: T;
+      };
+  outro?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ProductionCompositeBlock_select".
+ */
+export interface ProductionCompositeBlockSelect<T extends boolean = true> {
+  title?: T;
+  backgroundImage?: T;
+  cards?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  complianceItems?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ConsultationGridBlock_select".
+ */
+export interface ConsultationGridBlockSelect<T extends boolean = true> {
+  title?: T;
+  introTop?: T;
+  introBottom?: T;
+  rows?:
+    | T
+    | {
+        cards?:
+          | T
+          | {
+              text?: T;
+              tone?: T;
+              id?: T;
+            };
+        id?: T;
+      };
+  outro?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ServiceOfficeBlock_select".
+ */
+export interface ServiceOfficeBlockSelect<T extends boolean = true> {
+  eyebrow?: T;
+  title?: T;
+  text?: T;
+  image?: T;
+  imageUrl?: T;
+  imageAlt?: T;
+  details?:
+    | T
+    | {
+        label?: T;
+        value?: T;
+        link?: T;
+        id?: T;
+      };
+  buttonLabel?: T;
+  buttonUrl?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ApproachCompositeBlock_select".
+ */
+export interface ApproachCompositeBlockSelect<T extends boolean = true> {
+  topTitle?: T;
+  topText?: T;
+  backgroundImage?: T;
+  reviewLabel?: T;
+  reviewItems?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  includedTitle?: T;
+  includedSubtitle?: T;
+  includedItems?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  excludedTitle?: T;
+  excludedSubtitle?: T;
+  excludedItems?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  bottomLabel?: T;
+  bottomItems?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  bottomTitle?: T;
+  bottomText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "RichTextIntroBlock_select".
+ */
+export interface RichTextIntroBlockSelect<T extends boolean = true> {
+  paragraphs?:
+    | T
+    | {
+        content?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "OverlayInfoPanelBlock_select".
+ */
+export interface OverlayInfoPanelBlockSelect<T extends boolean = true> {
+  title?: T;
+  subtitle?: T;
+  backgroundImage?: T;
+  introText?: T;
+  services?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  outroText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "SupportSplitBlock_select".
+ */
+export interface SupportSplitBlockSelect<T extends boolean = true> {
+  leftLabel?: T;
+  leftItems?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  rightTitle?: T;
+  rightText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CtaBannerBlock_select".
+ */
+export interface CtaBannerBlockSelect<T extends boolean = true> {
+  title?: T;
+  description?: T;
+  buttonLabel?: T;
+  buttonUrl?: T;
+  image?: T;
+  darkMode?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TextareaListBlock_select".
+ */
+export interface TextareaListBlockSelect<T extends boolean = true> {
+  title?: T;
+  items?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "FeatureHighlightSplitBlock_select".
+ */
+export interface FeatureHighlightSplitBlockSelect<T extends boolean = true> {
+  title?: T;
+  introText?: T;
+  highlights?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "ApproachSplitBlock_select".
+ */
+export interface ApproachSplitBlockSelect<T extends boolean = true> {
+  title?: T;
+  text?: T;
+  label?: T;
+  items?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "IntroBadgeBlock_select".
+ */
+export interface IntroBadgeBlockSelect<T extends boolean = true> {
+  introText?: T;
+  badgeText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "TitleChecklistSplitBlock_select".
+ */
+export interface TitleChecklistSplitBlockSelect<T extends boolean = true> {
+  title?: T;
+  backgroundImage?: T;
+  items?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "formSubmissions_select".
+ */
+export interface FormSubmissionsSelect<T extends boolean = true> {
+  name?: T;
+  email?: T;
+  phone?: T;
+  company?: T;
+  subject?: T;
+  submissionType?: T;
+  servicePage?: T;
+  message?: T;
+  status?: T;
+  updatedAt?: T;
+  createdAt?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
@@ -314,6 +1528,1072 @@ export interface PayloadMigrationsSelect<T extends boolean = true> {
   batch?: T;
   updatedAt?: T;
   createdAt?: T;
+}
+/**
+ * Site-wide branding, favicon assets, and default SEO values.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "siteSettings".
+ */
+export interface SiteSetting {
+  id: number;
+  siteName: string;
+  siteUrl: string;
+  defaultTitle: string;
+  titleTemplate: string;
+  defaultDescription: string;
+  defaultRobots?: string | null;
+  themeColor?: string | null;
+  locale?: string | null;
+  faviconSvg?: (number | null) | Media;
+  faviconIco?: (number | null) | Media;
+  appleTouchIcon?: (number | null) | Media;
+  defaultOgImage?: (number | null) | Media;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Editable header navigation and CTA.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header".
+ */
+export interface Header {
+  id: number;
+  logo?: (number | null) | Media;
+  mobileLogo?: (number | null) | Media;
+  ctaLabel: string;
+  ctaUrl: string;
+  navItems?:
+    | {
+        label: string;
+        type: 'custom' | 'servicePage' | 'pageRef';
+        url?: string | null;
+        servicePage?: (number | null) | ServicePage;
+        pageRef?: ('home' | 'about' | 'services' | 'contact' | 'faq') | null;
+        newTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Footer logo, newsletter settings, and navigation links.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer".
+ */
+export interface Footer {
+  id: number;
+  logo?: (number | null) | Media;
+  newsletterTitle: string;
+  newsletterText: string;
+  newsletterFormEnabled?: boolean | null;
+  mainLinks?:
+    | {
+        label: string;
+        type: 'custom' | 'servicePage' | 'pageRef';
+        url?: string | null;
+        servicePage?: (number | null) | ServicePage;
+        pageRef?: ('home' | 'about' | 'services' | 'contact' | 'faq') | null;
+        newTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  utilityLinks?:
+    | {
+        label: string;
+        type: 'custom' | 'servicePage' | 'pageRef';
+        url?: string | null;
+        servicePage?: (number | null) | ServicePage;
+        pageRef?: ('home' | 'about' | 'services' | 'contact' | 'faq') | null;
+        newTab?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  copyrightText: string;
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Homepage hero and featured service positioning.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homePage".
+ */
+export interface HomePage {
+  id: number;
+  hero?: {
+    title?: string | null;
+    subtitle?: string | null;
+    backgroundImage?: (number | null) | Media;
+  };
+  featuredServices?:
+    | {
+        service: number | ServicePage;
+        position: 'top' | 'left-upper' | 'right-upper' | 'center-upper' | 'left-lower' | 'center-lower' | 'right-lower';
+        customLabel?: string | null;
+        isVisible?: boolean | null;
+        id?: string | null;
+      }[]
+    | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    canonicalUrl?: string | null;
+    robots?: string | null;
+    ogTitle?: string | null;
+    ogDescription?: string | null;
+    ogImage?: (number | null) | Media;
+    faviconSvgOverride?: (number | null) | Media;
+    faviconIcoOverride?: (number | null) | Media;
+    appleTouchIconOverride?: (number | null) | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Structured content for the About page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "aboutPage".
+ */
+export interface AboutPage {
+  id: number;
+  title: string;
+  lead?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  hero: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    primaryAction: {
+      label: string;
+      type: 'custom' | 'servicePage' | 'pageRef';
+      url?: string | null;
+      servicePage?: (number | null) | ServicePage;
+      pageRef?: ('home' | 'about' | 'services' | 'contact' | 'faq') | null;
+      newTab?: boolean | null;
+    };
+    secondaryAction: {
+      label: string;
+      type: 'custom' | 'servicePage' | 'pageRef';
+      url?: string | null;
+      servicePage?: (number | null) | ServicePage;
+      pageRef?: ('home' | 'about' | 'services' | 'contact' | 'faq') | null;
+      newTab?: boolean | null;
+    };
+    image?: (number | null) | Media;
+    /**
+     * Hero image URL fallback from the current frontend implementation.
+     */
+    imageUrl?: string | null;
+    imageAlt?: string | null;
+    stats?:
+      | {
+          value: string;
+          title: string;
+          description: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  aboutStory: {
+    eyebrow: string;
+    title: string;
+    body: {
+      root: {
+        type: string;
+        children: {
+          type: any;
+          version: number;
+          [k: string]: unknown;
+        }[];
+        direction: ('ltr' | 'rtl') | null;
+        format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+        indent: number;
+        version: number;
+      };
+      [k: string]: unknown;
+    };
+    cta: {
+      label: string;
+      type: 'custom' | 'servicePage' | 'pageRef';
+      url?: string | null;
+      servicePage?: (number | null) | ServicePage;
+      pageRef?: ('home' | 'about' | 'services' | 'contact' | 'faq') | null;
+      newTab?: boolean | null;
+    };
+    image?: (number | null) | Media;
+    /**
+     * Story image URL fallback from the current frontend implementation.
+     */
+    imageUrl?: string | null;
+    imageAlt?: string | null;
+  };
+  values: {
+    eyebrow: string;
+    title: string;
+    introText: string;
+    items?:
+      | {
+          title: string;
+          description: string;
+          icon?: (number | null) | Media;
+          /**
+           * Value icon URL fallback from the current frontend implementation.
+           */
+          iconUrl?: string | null;
+          iconAlt?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  office: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    image?: (number | null) | Media;
+    /**
+     * Office image URL fallback from the current frontend implementation.
+     */
+    imageUrl?: string | null;
+    imageAlt?: string | null;
+    details?:
+      | {
+          label: string;
+          value: string;
+          link?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    visitLink: {
+      label: string;
+      type: 'custom' | 'servicePage' | 'pageRef';
+      url?: string | null;
+      servicePage?: (number | null) | ServicePage;
+      pageRef?: ('home' | 'about' | 'services' | 'contact' | 'faq') | null;
+      newTab?: boolean | null;
+    };
+  };
+  team: {
+    eyebrow: string;
+    title: string;
+    members?:
+      | {
+          name: string;
+          role: string;
+          image?: (number | null) | Media;
+          /**
+           * Team member image URL fallback from the current frontend implementation.
+           */
+          imageUrl?: string | null;
+          imageAlt?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  cta: {
+    title: string;
+    description: string;
+    button: {
+      label: string;
+      type: 'custom' | 'servicePage' | 'pageRef';
+      url?: string | null;
+      servicePage?: (number | null) | ServicePage;
+      pageRef?: ('home' | 'about' | 'services' | 'contact' | 'faq') | null;
+      newTab?: boolean | null;
+    };
+    showArrow?: boolean | null;
+    variant?: ('default' | 'service') | null;
+    image?: (number | null) | Media;
+    /**
+     * CTA image URL fallback from the current frontend implementation.
+     */
+    imageUrl?: string | null;
+    imageAlt?: string | null;
+  };
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    canonicalUrl?: string | null;
+    robots?: string | null;
+    ogTitle?: string | null;
+    ogDescription?: string | null;
+    ogImage?: (number | null) | Media;
+    faviconSvgOverride?: (number | null) | Media;
+    faviconIcoOverride?: (number | null) | Media;
+    appleTouchIconOverride?: (number | null) | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Structured content for the Services overview page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "servicesPage".
+ */
+export interface ServicesPage {
+  id: number;
+  title: string;
+  lead?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  hero: {
+    eyebrow: string;
+    title: string;
+    text: string;
+  };
+  valuesGrid: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    items?:
+      | {
+          title: string;
+          text: string;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  cta: {
+    title: string;
+    description: string;
+    button: {
+      label: string;
+      type: 'custom' | 'servicePage' | 'pageRef';
+      url?: string | null;
+      servicePage?: (number | null) | ServicePage;
+      pageRef?: ('home' | 'about' | 'services' | 'contact' | 'faq') | null;
+      newTab?: boolean | null;
+    };
+    showArrow?: boolean | null;
+    variant?: ('default' | 'service') | null;
+    image?: (number | null) | Media;
+    /**
+     * CTA image URL fallback from the current frontend implementation.
+     */
+    imageUrl?: string | null;
+    imageAlt?: string | null;
+  };
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    canonicalUrl?: string | null;
+    robots?: string | null;
+    ogTitle?: string | null;
+    ogDescription?: string | null;
+    ogImage?: (number | null) | Media;
+    faviconSvgOverride?: (number | null) | Media;
+    faviconIcoOverride?: (number | null) | Media;
+    appleTouchIconOverride?: (number | null) | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Structured content and details for the Contact page.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contactPage".
+ */
+export interface ContactPage {
+  id: number;
+  title: string;
+  lead?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  hero: {
+    eyebrow: string;
+    title: string;
+    description: string;
+    contactMethods?:
+      | {
+          label: string;
+          value: string;
+          href: string;
+          icon: 'email' | 'phone';
+          id?: string | null;
+        }[]
+      | null;
+    form: {
+      namePlaceholder: string;
+      emailPlaceholder: string;
+      phonePlaceholder: string;
+      subjectPlaceholder: string;
+      messagePlaceholder: string;
+      submitLabel: string;
+    };
+  };
+  office: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    image?: (number | null) | Media;
+    /**
+     * Office image URL fallback from the current frontend implementation.
+     */
+    imageUrl?: string | null;
+    imageAlt?: string | null;
+    details?:
+      | {
+          label: string;
+          value: string;
+          link?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+    visitLink: {
+      label: string;
+      type: 'custom' | 'servicePage' | 'pageRef';
+      url?: string | null;
+      servicePage?: (number | null) | ServicePage;
+      pageRef?: ('home' | 'about' | 'services' | 'contact' | 'faq') | null;
+      newTab?: boolean | null;
+    };
+  };
+  partners: {
+    eyebrow: string;
+    title: string;
+    text: string;
+    logos?:
+      | {
+          image?: (number | null) | Media;
+          /**
+           * Partner logo URL fallback from the current frontend implementation.
+           */
+          imageUrl?: string | null;
+          imageAlt?: string | null;
+          id?: string | null;
+        }[]
+      | null;
+  };
+  cta: {
+    title: string;
+    description: string;
+    button: {
+      label: string;
+      type: 'custom' | 'servicePage' | 'pageRef';
+      url?: string | null;
+      servicePage?: (number | null) | ServicePage;
+      pageRef?: ('home' | 'about' | 'services' | 'contact' | 'faq') | null;
+      newTab?: boolean | null;
+    };
+    showArrow?: boolean | null;
+    variant?: ('default' | 'service') | null;
+    image?: (number | null) | Media;
+    /**
+     * CTA image URL fallback from the current frontend implementation.
+     */
+    imageUrl?: string | null;
+    imageAlt?: string | null;
+  };
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    canonicalUrl?: string | null;
+    robots?: string | null;
+    ogTitle?: string | null;
+    ogDescription?: string | null;
+    ogImage?: (number | null) | Media;
+    faviconSvgOverride?: (number | null) | Media;
+    faviconIcoOverride?: (number | null) | Media;
+    appleTouchIconOverride?: (number | null) | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * Structured FAQ content.
+ *
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqPage".
+ */
+export interface FaqPage {
+  id: number;
+  title: string;
+  lead?: string | null;
+  content?: {
+    root: {
+      type: string;
+      children: {
+        type: any;
+        version: number;
+        [k: string]: unknown;
+      }[];
+      direction: ('ltr' | 'rtl') | null;
+      format: 'left' | 'start' | 'center' | 'right' | 'end' | 'justify' | '';
+      indent: number;
+      version: number;
+    };
+    [k: string]: unknown;
+  } | null;
+  items?:
+    | {
+        question: string;
+        answer: string;
+        id?: string | null;
+      }[]
+    | null;
+  seo?: {
+    metaTitle?: string | null;
+    metaDescription?: string | null;
+    canonicalUrl?: string | null;
+    robots?: string | null;
+    ogTitle?: string | null;
+    ogDescription?: string | null;
+    ogImage?: (number | null) | Media;
+    faviconSvgOverride?: (number | null) | Media;
+    faviconIcoOverride?: (number | null) | Media;
+    appleTouchIconOverride?: (number | null) | Media;
+  };
+  updatedAt?: string | null;
+  createdAt?: string | null;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "siteSettings_select".
+ */
+export interface SiteSettingsSelect<T extends boolean = true> {
+  siteName?: T;
+  siteUrl?: T;
+  defaultTitle?: T;
+  titleTemplate?: T;
+  defaultDescription?: T;
+  defaultRobots?: T;
+  themeColor?: T;
+  locale?: T;
+  faviconSvg?: T;
+  faviconIco?: T;
+  appleTouchIcon?: T;
+  defaultOgImage?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "header_select".
+ */
+export interface HeaderSelect<T extends boolean = true> {
+  logo?: T;
+  mobileLogo?: T;
+  ctaLabel?: T;
+  ctaUrl?: T;
+  navItems?:
+    | T
+    | {
+        label?: T;
+        type?: T;
+        url?: T;
+        servicePage?: T;
+        pageRef?: T;
+        newTab?: T;
+        id?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "footer_select".
+ */
+export interface FooterSelect<T extends boolean = true> {
+  logo?: T;
+  newsletterTitle?: T;
+  newsletterText?: T;
+  newsletterFormEnabled?: T;
+  mainLinks?:
+    | T
+    | {
+        label?: T;
+        type?: T;
+        url?: T;
+        servicePage?: T;
+        pageRef?: T;
+        newTab?: T;
+        id?: T;
+      };
+  utilityLinks?:
+    | T
+    | {
+        label?: T;
+        type?: T;
+        url?: T;
+        servicePage?: T;
+        pageRef?: T;
+        newTab?: T;
+        id?: T;
+      };
+  copyrightText?: T;
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "homePage_select".
+ */
+export interface HomePageSelect<T extends boolean = true> {
+  hero?:
+    | T
+    | {
+        title?: T;
+        subtitle?: T;
+        backgroundImage?: T;
+      };
+  featuredServices?:
+    | T
+    | {
+        service?: T;
+        position?: T;
+        customLabel?: T;
+        isVisible?: T;
+        id?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        canonicalUrl?: T;
+        robots?: T;
+        ogTitle?: T;
+        ogDescription?: T;
+        ogImage?: T;
+        faviconSvgOverride?: T;
+        faviconIcoOverride?: T;
+        appleTouchIconOverride?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "aboutPage_select".
+ */
+export interface AboutPageSelect<T extends boolean = true> {
+  title?: T;
+  lead?: T;
+  content?: T;
+  hero?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        description?: T;
+        primaryAction?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              url?: T;
+              servicePage?: T;
+              pageRef?: T;
+              newTab?: T;
+            };
+        secondaryAction?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              url?: T;
+              servicePage?: T;
+              pageRef?: T;
+              newTab?: T;
+            };
+        image?: T;
+        imageUrl?: T;
+        imageAlt?: T;
+        stats?:
+          | T
+          | {
+              value?: T;
+              title?: T;
+              description?: T;
+              id?: T;
+            };
+      };
+  aboutStory?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        body?: T;
+        cta?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              url?: T;
+              servicePage?: T;
+              pageRef?: T;
+              newTab?: T;
+            };
+        image?: T;
+        imageUrl?: T;
+        imageAlt?: T;
+      };
+  values?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        introText?: T;
+        items?:
+          | T
+          | {
+              title?: T;
+              description?: T;
+              icon?: T;
+              iconUrl?: T;
+              iconAlt?: T;
+              id?: T;
+            };
+      };
+  office?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+        image?: T;
+        imageUrl?: T;
+        imageAlt?: T;
+        details?:
+          | T
+          | {
+              label?: T;
+              value?: T;
+              link?: T;
+              id?: T;
+            };
+        visitLink?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              url?: T;
+              servicePage?: T;
+              pageRef?: T;
+              newTab?: T;
+            };
+      };
+  team?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        members?:
+          | T
+          | {
+              name?: T;
+              role?: T;
+              image?: T;
+              imageUrl?: T;
+              imageAlt?: T;
+              id?: T;
+            };
+      };
+  cta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        button?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              url?: T;
+              servicePage?: T;
+              pageRef?: T;
+              newTab?: T;
+            };
+        showArrow?: T;
+        variant?: T;
+        image?: T;
+        imageUrl?: T;
+        imageAlt?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        canonicalUrl?: T;
+        robots?: T;
+        ogTitle?: T;
+        ogDescription?: T;
+        ogImage?: T;
+        faviconSvgOverride?: T;
+        faviconIcoOverride?: T;
+        appleTouchIconOverride?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "servicesPage_select".
+ */
+export interface ServicesPageSelect<T extends boolean = true> {
+  title?: T;
+  lead?: T;
+  content?: T;
+  hero?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+      };
+  valuesGrid?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+        items?:
+          | T
+          | {
+              title?: T;
+              text?: T;
+              id?: T;
+            };
+      };
+  cta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        button?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              url?: T;
+              servicePage?: T;
+              pageRef?: T;
+              newTab?: T;
+            };
+        showArrow?: T;
+        variant?: T;
+        image?: T;
+        imageUrl?: T;
+        imageAlt?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        canonicalUrl?: T;
+        robots?: T;
+        ogTitle?: T;
+        ogDescription?: T;
+        ogImage?: T;
+        faviconSvgOverride?: T;
+        faviconIcoOverride?: T;
+        appleTouchIconOverride?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "contactPage_select".
+ */
+export interface ContactPageSelect<T extends boolean = true> {
+  title?: T;
+  lead?: T;
+  content?: T;
+  hero?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        description?: T;
+        contactMethods?:
+          | T
+          | {
+              label?: T;
+              value?: T;
+              href?: T;
+              icon?: T;
+              id?: T;
+            };
+        form?:
+          | T
+          | {
+              namePlaceholder?: T;
+              emailPlaceholder?: T;
+              phonePlaceholder?: T;
+              subjectPlaceholder?: T;
+              messagePlaceholder?: T;
+              submitLabel?: T;
+            };
+      };
+  office?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+        image?: T;
+        imageUrl?: T;
+        imageAlt?: T;
+        details?:
+          | T
+          | {
+              label?: T;
+              value?: T;
+              link?: T;
+              id?: T;
+            };
+        visitLink?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              url?: T;
+              servicePage?: T;
+              pageRef?: T;
+              newTab?: T;
+            };
+      };
+  partners?:
+    | T
+    | {
+        eyebrow?: T;
+        title?: T;
+        text?: T;
+        logos?:
+          | T
+          | {
+              image?: T;
+              imageUrl?: T;
+              imageAlt?: T;
+              id?: T;
+            };
+      };
+  cta?:
+    | T
+    | {
+        title?: T;
+        description?: T;
+        button?:
+          | T
+          | {
+              label?: T;
+              type?: T;
+              url?: T;
+              servicePage?: T;
+              pageRef?: T;
+              newTab?: T;
+            };
+        showArrow?: T;
+        variant?: T;
+        image?: T;
+        imageUrl?: T;
+        imageAlt?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        canonicalUrl?: T;
+        robots?: T;
+        ogTitle?: T;
+        ogDescription?: T;
+        ogImage?: T;
+        faviconSvgOverride?: T;
+        faviconIcoOverride?: T;
+        appleTouchIconOverride?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "faqPage_select".
+ */
+export interface FaqPageSelect<T extends boolean = true> {
+  title?: T;
+  lead?: T;
+  content?: T;
+  items?:
+    | T
+    | {
+        question?: T;
+        answer?: T;
+        id?: T;
+      };
+  seo?:
+    | T
+    | {
+        metaTitle?: T;
+        metaDescription?: T;
+        canonicalUrl?: T;
+        robots?: T;
+        ogTitle?: T;
+        ogDescription?: T;
+        ogImage?: T;
+        faviconSvgOverride?: T;
+        faviconIcoOverride?: T;
+        appleTouchIconOverride?: T;
+      };
+  updatedAt?: T;
+  createdAt?: T;
+  globalType?: T;
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
