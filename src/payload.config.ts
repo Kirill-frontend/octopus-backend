@@ -28,6 +28,10 @@ export default buildConfig({
       baseDir: path.resolve(dirname),
     },
   },
+    cors: ['https://octopusgr.com', 'https://admin.octopusgr.com'],
+    csrf: [
+      'https://octopusgr.com', 'https://admin.octopusgr.com'
+    ],
   serverURL: process.env.SERVER_URL || 'http://localhost:3000',
   collections: [Users, Media, ServicePages, FormSubmissions],
   globals: [SiteSettings, Header, Footer, HomePage, AboutPage, ServicesPage, ContactPage, FaqPage],
