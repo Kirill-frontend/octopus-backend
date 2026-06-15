@@ -388,6 +388,21 @@ export const servicePageBlocks: Block[] = [
     ],
   },
   {
+    slug: 'portCaptainComposite',
+    dbName: 'pcc',
+    interfaceName: 'PortCaptainCompositeBlock',
+    fields: [
+      { name: 'approachTitle', type: 'text', required: true },
+      { name: 'approachText', type: 'textarea', required: true },
+      { name: 'approachLabel', type: 'text', required: true },
+      textItemsField('approachItems', 'Approach Items'),
+      { name: 'supportLabel', type: 'text', required: true },
+      textItemsField('supportItems', 'Support Items'),
+      { name: 'supportTitle', type: 'text', required: true },
+      { name: 'supportText', type: 'textarea' },
+    ],
+  },
+  {
     slug: 'ctaBanner',
     dbName: 'cta',
     interfaceName: 'CtaBannerBlock',

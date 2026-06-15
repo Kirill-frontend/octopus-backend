@@ -972,30 +972,27 @@ async function seed() {
         ],
       },
       {
-        blockType: 'approachSplit',
-        title: 'Our Approach',
-        text: 'Our focus is to identify risks early and ensure operational efficiency',
-        label: 'We review:',
-        items: textItems(
+        blockType: 'portCaptainComposite',
+        approachTitle: 'Our Approach',
+        approachText: 'Our focus is to identify risks early and ensure operational efficiency',
+        approachLabel: 'We review:',
+        approachItems: textItems(
           'Cargo information and drawings',
           'Vessel and lifting equipment compatibility',
           'Terminal capabilities and local restrictions',
           'Environmental and navigational factors',
           'Applicable standards: IMO, ISO, DNV, OCIMF',
         ),
-      },
-      {
-        blockType: 'supportSplit',
-        leftLabel: 'Once aligned on the operational concept, Octopus Group can deliver:',
-        leftItems: textItems(
+        supportLabel: 'Once aligned on the operational concept, Octopus Group can deliver:',
+        supportItems: textItems(
           'Port Captain attendance',
           'Survey services',
           'Engineering and technical planning',
           'Lifting and lashing equipment supply',
           'Agency services and local coordination',
         ),
-        rightTitle: "One Entry Point - Full Support When You're Ready",
-        rightText: 'You decide how far to proceed - we remain the single coordination hub.',
+        supportTitle: "One Entry Point - Full Support When You're Ready",
+        supportText: 'You decide how far to proceed - we remain the single coordination hub.',
       },
       {
         blockType: 'reasonsGrid',

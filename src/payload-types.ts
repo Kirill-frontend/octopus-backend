@@ -240,6 +240,7 @@ export interface ServicePage {
     | RichTextIntroBlock
     | OverlayInfoPanelBlock
     | SupportSplitBlock
+    | PortCaptainCompositeBlock
     | CtaBannerBlock
     | TextareaListBlock
     | FeatureHighlightSplitBlock
@@ -697,6 +698,33 @@ export interface SupportSplitBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PortCaptainCompositeBlock".
+ */
+export interface PortCaptainCompositeBlock {
+  approachTitle: string;
+  approachText: string;
+  approachLabel: string;
+  approachItems?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  supportLabel: string;
+  supportItems?:
+    | {
+        text: string;
+        id?: string | null;
+      }[]
+    | null;
+  supportTitle: string;
+  supportText?: string | null;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'portCaptainComposite';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "CtaBannerBlock".
  */
 export interface CtaBannerBlock {
@@ -990,6 +1018,7 @@ export interface ServicePagesSelect<T extends boolean = true> {
         richTextIntro?: T | RichTextIntroBlockSelect<T>;
         overlayInfoPanel?: T | OverlayInfoPanelBlockSelect<T>;
         supportSplit?: T | SupportSplitBlockSelect<T>;
+        portCaptainComposite?: T | PortCaptainCompositeBlockSelect<T>;
         ctaBanner?: T | CtaBannerBlockSelect<T>;
         textareaList?: T | TextareaListBlockSelect<T>;
         featureHighlightSplit?: T | FeatureHighlightSplitBlockSelect<T>;
@@ -1381,6 +1410,32 @@ export interface SupportSplitBlockSelect<T extends boolean = true> {
       };
   rightTitle?: T;
   rightText?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "PortCaptainCompositeBlock_select".
+ */
+export interface PortCaptainCompositeBlockSelect<T extends boolean = true> {
+  approachTitle?: T;
+  approachText?: T;
+  approachLabel?: T;
+  approachItems?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  supportLabel?: T;
+  supportItems?:
+    | T
+    | {
+        text?: T;
+        id?: T;
+      };
+  supportTitle?: T;
+  supportText?: T;
   id?: T;
   blockName?: T;
 }
