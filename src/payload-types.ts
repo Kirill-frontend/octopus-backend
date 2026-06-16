@@ -703,6 +703,7 @@ export interface SupportSplitBlock {
 export interface PortCaptainCompositeBlock {
   approachTitle: string;
   approachText: string;
+  approachImage?: (number | null) | Media;
   approachLabel: string;
   approachItems?:
     | {
@@ -719,6 +720,7 @@ export interface PortCaptainCompositeBlock {
     | null;
   supportTitle: string;
   supportText?: string | null;
+  supportImage?: (number | null) | Media;
   id?: string | null;
   blockName?: string | null;
   blockType: 'portCaptainComposite';
@@ -1420,6 +1422,7 @@ export interface SupportSplitBlockSelect<T extends boolean = true> {
 export interface PortCaptainCompositeBlockSelect<T extends boolean = true> {
   approachTitle?: T;
   approachText?: T;
+  approachImage?: T;
   approachLabel?: T;
   approachItems?:
     | T
@@ -1436,6 +1439,7 @@ export interface PortCaptainCompositeBlockSelect<T extends boolean = true> {
       };
   supportTitle?: T;
   supportText?: T;
+  supportImage?: T;
   id?: T;
   blockName?: T;
 }

@@ -394,12 +394,14 @@ export const servicePageBlocks: Block[] = [
     fields: [
       { name: 'approachTitle', type: 'text', required: true },
       { name: 'approachText', type: 'textarea', required: true },
+      { name: 'approachImage', type: 'upload', relationTo: 'media' },
       { name: 'approachLabel', type: 'text', required: true },
       textItemsField('approachItems', 'Approach Items'),
       { name: 'supportLabel', type: 'text', required: true },
       textItemsField('supportItems', 'Support Items'),
       { name: 'supportTitle', type: 'text', required: true },
       { name: 'supportText', type: 'textarea' },
+      { name: 'supportImage', type: 'upload', relationTo: 'media' },
     ],
   },
   {
