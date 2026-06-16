@@ -14,6 +14,7 @@
     "generate:importmap": "cross-env NODE_OPTIONS=--no-deprecation payload generate:importmap",
     "generate:types": "cross-env NODE_OPTIONS=--no-deprecation payload generate:types",
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
+    "media:repair": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/regenerateMediaDerivatives.ts",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
     "seed:admin-plan": "cross-env NODE_OPTIONS=--no-deprecation tsx src/seed/adminPlan.ts",
     "seed:flying-squad": "cross-env NODE_OPTIONS=--no-deprecation tsx src/seed/addFlyingSquadServicePage.ts",
