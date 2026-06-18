@@ -241,6 +241,7 @@ export interface ServicePage {
     | OverlayInfoPanelBlock
     | SupportSplitBlock
     | PortCaptainCompositeBlock
+    | CenteredImageSectionBlock
     | CtaBannerBlock
     | TextareaListBlock
     | FeatureHighlightSplitBlock
@@ -727,6 +728,17 @@ export interface PortCaptainCompositeBlock {
 }
 /**
  * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CenteredImageSectionBlock".
+ */
+export interface CenteredImageSectionBlock {
+  title: string;
+  image?: (number | null) | Media;
+  id?: string | null;
+  blockName?: string | null;
+  blockType: 'centeredImageSection';
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
  * via the `definition` "CtaBannerBlock".
  */
 export interface CtaBannerBlock {
@@ -1021,6 +1033,7 @@ export interface ServicePagesSelect<T extends boolean = true> {
         overlayInfoPanel?: T | OverlayInfoPanelBlockSelect<T>;
         supportSplit?: T | SupportSplitBlockSelect<T>;
         portCaptainComposite?: T | PortCaptainCompositeBlockSelect<T>;
+        centeredImageSection?: T | CenteredImageSectionBlockSelect<T>;
         ctaBanner?: T | CtaBannerBlockSelect<T>;
         textareaList?: T | TextareaListBlockSelect<T>;
         featureHighlightSplit?: T | FeatureHighlightSplitBlockSelect<T>;
@@ -1440,6 +1453,16 @@ export interface PortCaptainCompositeBlockSelect<T extends boolean = true> {
   supportTitle?: T;
   supportText?: T;
   supportImage?: T;
+  id?: T;
+  blockName?: T;
+}
+/**
+ * This interface was referenced by `Config`'s JSON-Schema
+ * via the `definition` "CenteredImageSectionBlock_select".
+ */
+export interface CenteredImageSectionBlockSelect<T extends boolean = true> {
+  title?: T;
+  image?: T;
   id?: T;
   blockName?: T;
 }

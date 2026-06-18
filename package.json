@@ -16,6 +16,7 @@
     "lint": "cross-env NODE_OPTIONS=--no-deprecation eslint .",
     "media:repair": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/regenerateMediaDerivatives.ts",
     "payload": "cross-env NODE_OPTIONS=--no-deprecation payload",
+    "seed:port-captain-planning": "cross-env NODE_OPTIONS=--no-deprecation tsx src/scripts/updatePortCaptainPlanningBlock.ts",
     "seed:admin-plan": "cross-env NODE_OPTIONS=--no-deprecation tsx src/seed/adminPlan.ts",
     "seed:flying-squad": "cross-env NODE_OPTIONS=--no-deprecation tsx src/seed/addFlyingSquadServicePage.ts",
     "seed:structured-globals": "cross-env NODE_OPTIONS=--no-deprecation tsx src/seed/updateStructuredGlobals.ts",

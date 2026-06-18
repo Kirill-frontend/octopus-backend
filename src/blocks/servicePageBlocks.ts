@@ -405,6 +405,15 @@ export const servicePageBlocks: Block[] = [
     ],
   },
   {
+    slug: 'centeredImageSection',
+    dbName: 'cimg',
+    interfaceName: 'CenteredImageSectionBlock',
+    fields: [
+      { name: 'title', type: 'text', required: true },
+      { name: 'image', type: 'upload', relationTo: 'media' },
+    ],
+  },
+  {
     slug: 'ctaBanner',
     dbName: 'cta',
     interfaceName: 'CtaBannerBlock',

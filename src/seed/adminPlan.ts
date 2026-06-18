@@ -995,6 +995,10 @@ async function seed() {
         supportText: 'You decide how far to proceed - we remain the single coordination hub.',
       },
       {
+        blockType: 'centeredImageSection',
+        title: 'Planning',
+      },
+      {
         blockType: 'reasonsGrid',
         title: 'Reporting',
         subtitle: 'Upon completion:',
