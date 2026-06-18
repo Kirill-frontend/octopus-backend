@@ -235,6 +235,14 @@ export const servicePageBlocks: Block[] = [
               width: '50%',
             },
           },
+          {
+            name: 'transparentCards',
+            type: 'checkbox',
+            defaultValue: false,
+            admin: {
+              width: '50%',
+            },
+          },
         ],
       },
       {

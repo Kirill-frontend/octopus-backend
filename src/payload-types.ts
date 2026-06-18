@@ -520,6 +520,7 @@ export interface StructuresCardsBlock {
 export interface ProductionCompositeBlock {
   title: string;
   backgroundImage?: (number | null) | Media;
+  transparentCards?: boolean | null;
   cards?:
     | {
         text: string;
@@ -1272,6 +1273,7 @@ export interface StructuresCardsBlockSelect<T extends boolean = true> {
 export interface ProductionCompositeBlockSelect<T extends boolean = true> {
   title?: T;
   backgroundImage?: T;
+  transparentCards?: T;
   cards?:
     | T
     | {

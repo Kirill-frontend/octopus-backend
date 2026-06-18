@@ -17,6 +17,7 @@ import { Header } from './globals/Header'
 import { HomePage } from './globals/HomePage'
 import { ServicesPage } from './globals/ServicesPage'
 import { SiteSettings } from './globals/SiteSettings'
+import { withCollectionRedeployHook, withGlobalRedeployHook } from './lib/redeployHook'
 
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
@@ -33,8 +34,22 @@ export default buildConfig({
       'https://octopusgr.com', 'https://admin.octopusgr.com'
     ],
   serverURL: process.env.SERVER_URL || 'http://localhost:3000',
-  collections: [Users, Media, ServicePages, FormSubmissions],
-  globals: [SiteSettings, Header, Footer, HomePage, AboutPage, ServicesPage, ContactPage, FaqPage],
+  collections: [
+    withCollectionRedeployHook(Users),
+    withCollectionRedeployHook(Media),
+    withCollectionRedeployHook(ServicePages),
+    withCollectionRedeployHook(FormSubmissions),
+  ],
+  globals: [
+    withGlobalRedeployHook(SiteSettings),
+    withGlobalRedeployHook(Header),
+    withGlobalRedeployHook(Footer),
+    withGlobalRedeployHook(HomePage),
+    withGlobalRedeployHook(AboutPage),
+    withGlobalRedeployHook(ServicesPage),
+    withGlobalRedeployHook(ContactPage),
+    withGlobalRedeployHook(FaqPage),
+  ],
   editor: lexicalEditor(),
   secret: process.env.PAYLOAD_SECRET || '',
   typescript: {
